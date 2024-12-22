@@ -2,12 +2,11 @@ import { LoginValidator } from '#validators/auth'
 import { login, LoginRequest } from '@/api'
 import { ControlledCheckbox } from '@/components/form/checkbox'
 import { ControlledInput } from '@/components/form/input'
-import { useUser } from '@/hook'
 import { Button } from '@blueprintjs/core'
 import { vineResolver } from '@hookform/resolvers/vine'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { Navigate, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 export function LoginPage() {
   const { control, handleSubmit } = useForm<LoginRequest>({
@@ -25,16 +24,6 @@ export function LoginPage() {
     mutationFn: login,
     onSuccess: () => navigate('/dashboard'),
   })
-
-  const { user, isPending } = useUser()
-
-  if (isPending) {
-    return <div>Loading...</div>
-  }
-
-  if (user) {
-    return <Navigate to="/dashboard" />
-  }
 
   return (
     <form

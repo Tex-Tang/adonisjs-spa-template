@@ -18,15 +18,17 @@ router
       .group(() => {
         router.get('/me', async ({ auth, response }) => response.ok(auth.user))
       })
-      .middleware(middleware.auth())
+      .use(middleware.auth())
   })
   .prefix('api')
 
 router.get('/login', async ({ view, response, auth }) => {
-  if (auth.user) {
+  try {
+    await auth.authenticate()
     return response.redirect('/dashboard')
+  } catch {
+    return view.render('index')
   }
-
-  return view.render('index')
 })
-router.get('/*', async ({ view }) => view.render('index')).middleware(middleware.auth())
+
+router.get('/*', async ({ view }) => view.render('index')).use(middleware.auth())
